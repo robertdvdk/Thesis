@@ -3,11 +3,11 @@ Generates artificial promoter-protein pairs with motifs that have a
 specified level of difficulty
 
 Author: Robert van der Klis
+
+Usage: helper module
 """
 # Import statements
-from random import choice
-from random import random
-from random import seed
+from random import choice, randint, random, seed
 
 # Global variables
 NUCLEOTIDES = ["A", "C", "G", "T"]
@@ -127,28 +127,29 @@ def domain_pairs(promoter_motif_length, n_motifs):
             i += 1
     return pairs
 
-def generate_domain_dataset(motif_chance, domain_pairs, num_sequences, prom_length, motif_length):
+def generate_domain_dataset(motif_chance, domain_pairs, num_sequences,
+                            prom_length, motif_length):
     promoter_domain = {}
     for pair in range(num_sequences):
-        if pair % 10000 == 0:
-            print(f'{pair} sequences generated')
         promoter = ''
         domains = set()
-        while len(promoter) < prom_length:
-            if random() < motif_chance and len(promoter) + motif_length < prom_length:
-                chosen_motif = choice(list(domain_pairs.keys()))
-                promoter += chosen_motif
-                domains.add(domain_pairs[chosen_motif])
-            else:
-                promoter += choice(NUCLEOTIDES)
-        promoter_domain[promoter] = (promoter, list(domains))
+        for nt in range(prom_length):
+            promoter += choice(NUCLEOTIDES)
+        taken = []
+        for motif, domain in domain_pairs.items():
+            if random() < motif_chance:
+                begin = randint(0, prom_length - motif_length)
+                end = begin + motif_length
+                while (begin in taken) or (end in taken):
+                    begin = randint(0, prom_length - motif_length)
+                    end = begin + motif_length
+                taken.append(list(range(begin, end + 1)))
+                promoter = promoter[:begin] + motif + promoter[end:]
+                domains.add(domain)
+            promoter_domain[promoter] = (promoter, list(domains))
     return promoter_domain
 
 
 if __name__ == "__main__":
-    """The main function of this module"""
-    seed(1)
-    # motif_pairs = generate_motif_pairs(5, 10, 10)
-    # promoter_protein_pairs = generate_motif_dataset(0.1, motif_pairs, 10000, 100, 200)
-    pairs = domain_pairs(5, 10)
-    print(generate_domain_dataset(0.1, pairs, 10, 50, 5))
+    """Helper module: no main function"""
+    pass

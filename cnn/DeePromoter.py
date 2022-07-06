@@ -79,7 +79,6 @@ class DeePromoter(nn.Module):
         self.flatten = nn.Flatten()
         x = torch.zeros(input_shape)
         shape = self.get_feature_shape(x)
-
         self.fc = nn.Sequential(
             nn.Linear(shape, shape),
             nn.ReLU(),

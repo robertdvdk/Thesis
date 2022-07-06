@@ -93,8 +93,10 @@ def main():
     select_relevant_idmappings(raw_dir, processed_dir)
     interpro_select_databases(raw_dir, processed_dir, 'PF')
 
-    # Step 3: Generate dictionary of {species_name: {gene ID: [UniProt ID, GenBank ID, promoter sequence, protein sequence]}}
-    print('Step 3: Generate dictionary of {species_name: {gene ID: [UniProt ID, GenBank ID, promoter sequence, protein sequence]}}')
+    # Step 3: Generate dictionary of {species_name:
+    # {gene ID: [UniProt ID, GenBank ID, promoter sequence, protein sequence]}}
+    print('Step 3: Generate dictionary of {species_name: {gene ID: '
+          '[UniProt ID, GenBank ID, promoter sequence, protein sequence]}}')
     if not os.path.exists(f'{processed_dir}/paired_sequences'):
         os.system(f'mkdir {processed_dir}/paired_sequences')
         epd_dict = get_epd_ids(raw_dir)
@@ -103,7 +105,8 @@ def main():
         # Step 4: Write to files
         print('Step 4: Write to files')
         for species, promoters in epd_dict.items():
-            with open(f'{processed_dir}/paired_sequences/{species}.txt', 'w') as fopen:
+            with open(f'{processed_dir}/paired_sequences/{species}.txt', 'w') \
+                    as fopen:
                 for gene_id, rest in promoters.items():
                     if len(rest) != 4:
                         continue
@@ -111,7 +114,9 @@ def main():
                     genbank_id = rest[1]
                     prom_seq = rest[2]
                     prot_seq = rest[3]
-                    entry = f'GENEID: {gene_id}_{species}\nUPID: {uniprot_id}\nGBID: {genbank_id}\nPROMSEQ: {prom_seq}\nPROTSEQ: {prot_seq}\n'
+                    entry = f'GENEID: {gene_id}_{species}\n' \
+                            f'UPID: {uniprot_id}\nGBID: {genbank_id}\n' \
+                            f'PROMSEQ: {prom_seq}\nPROTSEQ: {prot_seq}\n'
                     fopen.write(entry)
 
     # Step 5: Retrieve gene IDs, UniProt IDs, and promoter sequences
