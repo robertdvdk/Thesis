@@ -1,9 +1,10 @@
 """
 Author: Robert van der Klis
 
-What does this module do
+Used to convert generated sequences to FASTA files. I used this to be able to
+analyse these sequences for motifs.
 
-Usage: python3 ...
+Usage: python3 sample_to_fasta.py
 """
 
 

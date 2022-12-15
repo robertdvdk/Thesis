@@ -1,9 +1,8 @@
 """
 Author: Robert van der Klis
 
-What does this module do
-
-Usage: python3 ...
+A discriminator used to determine the discriminator's independent performance
+on discriminating ground truth from generated sequences.
 """
 
 
@@ -11,8 +10,6 @@ Usage: python3 ...
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import os
-import torch.optim as optim
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder
 import dataloader

@@ -1,9 +1,8 @@
 """
 Author: Robert van der Klis
 
-What does this module do
-
-Usage: python3 ...
+Counts number of approximate matches for a given motif. Used to quantify
+performance of GANs.
 """
 
 

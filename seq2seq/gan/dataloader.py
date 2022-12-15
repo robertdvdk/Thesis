@@ -1,9 +1,7 @@
 """
 Author: Robert van der Klis
 
-What does this module do
-
-Usage: python3 ...
+Helper module, tokenizes strings.
 """
 
 
