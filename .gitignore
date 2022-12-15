@@ -1,0 +1,16 @@
+/seq2domain/dnabert/
+/data/
+/gan_outputs/logs/1ediff/
+/gan_outputs/logs/2EDIFF_N/
+/gan_outputs/logs/3EDIFF_CONSTANTN/
+/gan_outputs/logs/3ediff_lang/
+/gan_outputs/logs/REAL_ALL/
+/gan_outputs/logs/REAL_ONLY_ARATH/
+/gan_outputs/logs/cumulative_hist.png
+/gan_outputs/logs/cumulative_hist_large.png
+/gan_outputs/logs/gan_perf_large.png
+/gan_outputs/logs/gan_perf_new.png
+/gan_outputs/logs/gan_perf_newest.png
+/gan_outputs/logs/motif_hist.png
+/gan_outputs/logs/motif_hist_large.png
+/gan_outputs/logs/motif_hist_new.png

@@ -38,7 +38,7 @@ def similarity(string1, string2):
     identity = identical_chars / length_shortest
     return identity
 
-def generate_motif_pairs(promoter_motif_length, aa_motif_length, n_motifs):
+def motif_pairs(promoter_motif_length, aa_motif_length, n_motifs):
     """Generates artificial promoter-protein motif pairs
 
     Args:
@@ -72,7 +72,7 @@ def generate_motif_pairs(promoter_motif_length, aa_motif_length, n_motifs):
     return motif_pairs
 
 def generate_motif_dataset(motif_chance, motif_pairs, num_sequences, prom_length,
-                     prot_length):
+                     prot_length, motif_length, proteinmotif_length):
     """Generates an artificial dataset of promoter-protein pairs
 
     Args:
@@ -94,19 +94,35 @@ def generate_motif_dataset(motif_chance, motif_pairs, num_sequences, prom_length
     """
     promoter_protein = {}
     for pair in range(num_sequences):
-        promoter, protein = "", "M"
-        used_motifs = []
-        for base in range(prom_length):
-            if random() < motif_chance:
-                chosen_motif = choice(list(motif_pairs.keys()))
-                promoter += chosen_motif
-                used_motifs.append(motif_pairs[chosen_motif])
-            promoter += choice(NUCLEOTIDES)
+        promoter, protein = "", ""
+        for nt in range(prom_length):
+            promoter += 'A'
         for aa in range(prot_length - 1):
-            if random() < motif_chance/(prom_length/prot_length) and used_motifs:
-                protein += choice(used_motifs)
             protein += choice(AMINO_ACIDS)
-        promoter_protein[promoter] = protein
+        promtaken, prottaken = [], []
+        for motif, proteinmotif in motif_pairs.items():
+            # promoter = motif * 10
+            # protein = proteinmotif * 10
+            if random() < motif_chance:
+                # prombegin = 50
+                prombegin = randint(0, prom_length - motif_length)
+                promend = prombegin + motif_length
+                while (prombegin in promtaken) or (promend in promtaken):
+                    prombegin = randint(0, prom_length - motif_length)
+                    promend = prombegin + motif_length
+                promtaken.append(list(range(prombegin, promend + 1)))
+
+                # protbegin = 30
+                protbegin = randint(1, prot_length - proteinmotif_length)
+                protend = protbegin + proteinmotif_length
+                while (protbegin in prottaken) or (protend in prottaken):
+                    protbegin = randint(0, prot_length - proteinmotif_length)
+                    protend = protbegin + proteinmotif_length
+                promtaken.append(list(range(prombegin, promend + 1)))
+
+                promoter = promoter[:prombegin] + motif + promoter[promend:]
+                protein = protein[:protbegin] + proteinmotif + protein[protend:]
+        promoter_protein[promoter] = (promoter, protein)
     return promoter_protein
 
 def domain_pairs(promoter_motif_length, n_motifs):
@@ -152,4 +168,30 @@ def generate_domain_dataset(motif_chance, domain_pairs, num_sequences,
 
 if __name__ == "__main__":
     """Helper module: no main function"""
-    pass
+    motif_length = 10
+    num_motifs = 1
+    motif_chance = 1
+    prom_length = 100
+    num_promoters = 10000
+    domain = False
+    aa_motif_length = 5
+    prot_length = 50
+    seed(1)
+    pairs = motif_pairs(10, 5, 1)
+    print(pairs)
+    ds = generate_motif_dataset(motif_chance, pairs, num_promoters, prom_length, prot_length, motif_length, aa_motif_length)
+    with open('/home/klis004/nbk_lustre/gan_input/tensorflow_data_3ediff_constanteachtergrond.txt', 'w') as fopen:
+        lines = 0
+        while lines < num_promoters:
+            for v in ds.values():
+                fopen.write(f'{v[0]}\n')
+                lines += 1
+
+
+        # while len(fopen.readlines()) < num_promoters:
+        #     for v in ds.values():
+        #         fopen.write(f'{v[0]}\n')
+        # # for i in range(num_promoters): #weghalen
+        # for v in ds.values():
+        #     # fopen.write(f'{v[0]}\t{v[1]}\n')
+        #     fopen.write(f'{v[0]}\n')

@@ -23,6 +23,9 @@ import sys
 # Function definitions
 def main():
     """Calls all necessary functions"""
+    begin_base = 800
+    end_base = 1000
+
     if len(sys.argv) != 3:
         print(
             'Incorrect usage. Usage: python3 main.py {raw directory} {processed directory}')
@@ -131,7 +134,16 @@ def main():
             with open(f'{processed_dir}/domains/{species}.txt', 'w') as fopen:
                 for prot_id, (curr_geneid, curr_promseq, domains) in info.items():
                     domains_str = " ".join(domains)
-                    fopen.write(f'UPID: {prot_id}\nGENEID: {curr_geneid}\nPROMSEQ: {curr_promseq}\nDOMAINS: {domains_str}\n')
+                    fopen.write(f'UPID: {prot_id}\nGENEID: {curr_geneid}\n'
+                                f'PROMSEQ: {curr_promseq}\n'
+                                f'DOMAINS: {domains_str}\n')
+
+    # Step 7: shorten promoters if necessary
+    print('Step 7: Shorten promoters')
+    shorten_promoter(processed_dir, begin_base, end_base,
+                     'paired_sequences')
+    shorten_promoter(processed_dir, begin_base, end_base, 'domains')
+
     print('Done!')
 if __name__ == "__main__":
     """The main function of this module"""

@@ -59,7 +59,7 @@ def parse_genbank(filename):
         for line in fopen:
             curr = line.strip()
             if curr.startswith('VERSION'):
-                # line with gene identifier starts with /gene=
+                # line with protein identifier starts with VERSION
                 id = curr.split()[1]
             elif curr.startswith('ORIGIN'):
                 # "ORIGIN" always occurs directly before protein sequence in

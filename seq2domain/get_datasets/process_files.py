@@ -72,6 +72,44 @@ def interpro_select_databases(raw_dir, processed_dir, criterium):
                 if words[3].startswith(criterium):
                     writeopen.write(f'{words[0]}\t{words[3]}\n')
 
+def shorten_promoter(processed_dir, begin_base, end_base, inside_dir):
+    """Shortens promoters from 1251 bases to the specified range
+
+    Args:
+        processed_dir::str
+            Directory containing processed files
+        begin_base::int
+            The base at which to begin (1000th base is the Transcription
+                Start Site)
+        end_base::int
+            The base at which to end (1000th base is the Transcription
+                Start Site)
+        inside_dir::str
+            The directory from which to pull the sequences (either
+                paired_sequences or domains)
+
+    Returns:
+        None, writes to file
+    """
+    if os.path.exists(f'{processed_dir}/{inside_dir}'
+                      f'{begin_base}-{end_base}'):
+        return
+
+    os.system(f'mkdir {processed_dir}/{inside_dir}{begin_base}-{end_base}')
+    for file in os.listdir(f'{processed_dir}/{inside_dir}'):
+        out = ''
+        with open(f'{processed_dir}/{inside_dir}/{file}') as fopen:
+            for line in fopen:
+                if line.startswith('PROMSEQ'):
+                    promseq = line.split()[1].strip()
+                    outline = 'PROMSEQ: ' + promseq[begin_base:end_base]
+                else:
+                    outline = line.strip()
+                out += outline + '\n'
+        with open(f'{processed_dir}/{inside_dir}{begin_base}-{end_base}/'
+                  f'{file}', 'w') as fopen:
+            fopen.write(out)
+
 def main():
     """Calls the functions"""
     raw_dir = sys.argv[1]
